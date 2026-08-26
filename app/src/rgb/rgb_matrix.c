@@ -384,7 +384,7 @@ void zmk_rgb_matrix_indicators(void) {
 bool zmk_rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max) {
 
     static const uint8_t ime_leds[] = {74, 76};
-
+    uint8_t val  = zmk_rgb_matrix_get_val();
     bool ime_on = keyboard_get_led_state().scroll_lock;
 
     /* ソリッドカラーのときだけ、他を全消灯 */
@@ -398,9 +398,9 @@ bool zmk_rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max) {
     for (uint8_t n = 0; n < ARRAY_SIZE(ime_leds); n++) {
         uint8_t i = ime_leds[n];
         if (ime_on) {
-            RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
+            RGB_MATRIX_INDICATOR_SET_COLOR(i, val, 0, 0);
         } else {
-            RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 255);
+            RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, val);
         }
     }
 
