@@ -62,4 +62,14 @@ jobs:
         run: |
           cd zmk
           cd app
-          west build -p -b rtl8762gn_evb -- -DSHIELD=rtk_keyboard
+          west build -p -b rtl8762gn_evb -- -DSHIELD=keychron_q1_ultra_ansi
+
+      - name: upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: keychron_q1_ultra_ansi-firmware
+          path: |
+            zmk/app/build/zephyr/zmk.uf2
+            zmk/app/build/zephyr/zmk.hex
+          if-no-files-found: warn
+
