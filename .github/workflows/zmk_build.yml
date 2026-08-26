@@ -71,5 +71,7 @@ jobs:
           path: |
             zmk/app/build/zephyr/zmk.uf2
             zmk/app/build/zephyr/zmk.hex
+            zmk/app/build/zephyr/zmk.bin
+            zmk/app/build/zephyr/zmk.elf
           if-no-files-found: warn
 
