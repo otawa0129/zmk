@@ -382,6 +382,26 @@ void zmk_rgb_matrix_indicators(void) {
 #endif
 }
 bool zmk_rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max) {
+    static const uint8_t ime_leds[] = {74, 76};
+
+    bool ime_on = keyboard_get_led_state().scroll_lock;
+
+    /* ソリッドカラーのときだけ、他を全消灯 */
+    if (rgb_matrix_config.mode == RGB_EFFECT_SOLID_COLOR) {
+        for (uint8_t i = led_min; i < led_max; i++) {
+            zmk_rgb_matrix_set_color(i, 0, 0, 0);
+        }
+    }
+
+    /* IME連動キーを上書き */
+    for (uint8_t n = 0; n < ARRAY_SIZE(ime_leds); n++) {
+        uint8_t i = ime_leds[n];
+        if (ime_on) {
+            RGB_MATRIX_INDICATOR_SET_COLOR(i, 255, 0, 0);
+        } else {
+            RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 255);
+        }
+    }
     // if(keyboard_get_led_state()&0x02)
     // {
     //     // LOG_ERR("led min:%d,max:%d",led_min,led_max);
@@ -403,6 +423,7 @@ bool zmk_rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max) {
     // #endif
     return false;
 }
+
 struct rgb_matrix_limits_t zmk_rgb_matrix_get_limits(uint8_t iter) {
     struct rgb_matrix_limits_t limits = {0};
 #if defined(RGB_MATRIX_LED_PROCESS_LIMIT) && RGB_MATRIX_LED_PROCESS_LIMIT > 0 &&                   \
