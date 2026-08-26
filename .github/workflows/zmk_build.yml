@@ -62,7 +62,7 @@ jobs:
         run: |
           cd zmk
           cd app
-          west build -p -b rtl8762gn_evb -- -DSHIELD=keychron_q1_ultra_ansi
+          west build -p -b rtl8762gtu_kb -- -DSHIELD=keychron_q1_ultra_ansi
 
       - name: upload firmware
         uses: actions/upload-artifact@v4
