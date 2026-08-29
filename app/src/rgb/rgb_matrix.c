@@ -384,7 +384,7 @@ void zmk_rgb_matrix_indicators(void) {
 bool zmk_rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max) {
 
     static const uint8_t ime_leds[] = {58};
-    bool ime_on = (keyboard_get_led_state()&0x04);
+    bool ime_on = keyboard_get_led_state().scroll_lock;
     // ゆっくり点滅用の三角波（>>3 で速さ調整、大きいほどゆっくり）
     uint16_t phase = (g_rgb_timer >> 3) % 510;      // 0〜509
     uint8_t  blink = (phase < 255) ? phase : (510 - phase);
