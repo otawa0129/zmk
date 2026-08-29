@@ -383,9 +383,16 @@ void zmk_rgb_matrix_indicators(void) {
 }
 bool zmk_rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max) {
 
-    static const uint8_t ime_leds[] = {74, 76};
+    static const uint8_t ime_leds[] = {58};
+    bool ime_on = keyboard_get_led_state()&0x04;
+    // ゆっくり点滅用の三角波（>>3 で速さ調整、大きいほどゆっくり）
+    uint16_t phase = (g_rgb_timer >> 3) % 510;      // 0〜509
+    uint8_t  blink = (phase < 255) ? phase : (510 - phase);
+
     uint8_t val  = zmk_rgb_matrix_get_val();
-    bool ime_on = keyboard_get_led_state().scroll_lock;
+    uint8_t mode = zmk_rgb_matrix_get_mode();
+    uint8_t val_blink = (uint16_t)val * blink / 255;
+
 
     /* ソリッドカラーのときだけ、他を全消灯 */
     if (rgb_matrix_config.mode == RGB_EFFECT_SOLID_COLOR) {
@@ -398,9 +405,9 @@ bool zmk_rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max) {
     for (uint8_t n = 0; n < ARRAY_SIZE(ime_leds); n++) {
         uint8_t i = ime_leds[n];
         if (ime_on) {
-            RGB_MATRIX_INDICATOR_SET_COLOR(i, val, 0, 0);
+            RGB_MATRIX_INDICATOR_SET_COLOR(i, val_blink, 0, 0);
         } else {
-            RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, val);
+            RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, val_blink);
         }
     }
 
